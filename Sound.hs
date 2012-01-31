@@ -14,3 +14,4 @@ slice seconds samplingRate wave =
 
 scale :: (Int,Int) -> [Double] -> [Int]
 scale (min,max) (x:xs) = truncate (x * fromIntegral (max - min)) + min : scale (min,max) xs
+scale _         []     = []  
