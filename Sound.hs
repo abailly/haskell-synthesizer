@@ -8,8 +8,9 @@ wave frequency  =
   let n = samplingRate `div` frequency
   in map (sin . (* (2 * pi))) [ fromIntegral i / fromIntegral n | i <- [0 .. n]]
 
-amplitude ratio = map (*ratio)
-
+amplitude ratio | ratio > 0 && ratio < 1 = map (*ratio)
+                | otherwise              = id
+                                           
 slice seconds wave = 
   take (samplingRate * seconds) repeatWave
   where
@@ -18,3 +19,6 @@ slice seconds wave =
 scale :: (Int,Int) -> [Double] -> [Int]
 scale (min,max) (x:xs) = truncate (((x + 1) / 2)  * fromIntegral (max - min)) + min : scale (min,max) xs
 scale _         []     = []  
+
+computeSound frequency duration volume = 
+  slice duration $ amplitude volume $ wave frequency
