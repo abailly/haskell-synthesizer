@@ -14,11 +14,12 @@ slice_a_wave_for_a_given_number_of_seconds =
     aWave   = wave 440 samplingRate
 
 scale_wave_to_a_single_byte_value =
-  take 3 (scale (0,255) wave) ~?= [0,1,2]
+  take 3 (scale (0,255) aWave) ~?= [0,16,31]
   where
     aWave = wave 440 samplingRate
 
 tests = [ convert_a_frequency_to_a_wave, 
-          slice_a_wave_for_a_given_number_of_seconds]
+          slice_a_wave_for_a_given_number_of_seconds,
+          scale_wave_to_a_single_byte_value]
         
 runAllTests = runTestTT $ TestList tests
