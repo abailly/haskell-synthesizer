@@ -3,7 +3,7 @@ import Sound
 
 -- first test on sound 
 convert_a_frequency_to_a_wave = 
-  take 3 (wave frequency samplingRate) ~?= [0.0,6.283185307179587e-2,0.12566370614359174]
+  take 3 (wave frequency samplingRate) ~?= [0.0,6.279051952931337e-2,0.12533323356430426]
   where
     frequency    = 440
     samplingRate = 44000
