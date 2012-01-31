@@ -7,3 +7,9 @@ convertAFrequencyToAWave =
   where
     frequency    = 440
     samplingRate = 44000
+
+slice_a_wave_for_a_given_number_of_seconds = 
+  length (slice seconds aWave) ~?=  88000
+  where
+    seconds = 2 
+    aWave   = wave 440 44000
