@@ -6,10 +6,28 @@ import Music
 prepareSound = B.pack.map fromIntegral.scale (0,255)
 outputSound  = B.putStr. prepareSound
 
-note p = Note p 4 Crotchet
+simplenote p = Note p 4 Crotchet
 
+note (p,o,d) = Note p o d
+
+harrypotter = [ (B,4,Crotchet), 
+                (E,5,Pointed Crotchet), 
+                (G,5,Quaver), 
+                (Fs,5,Crotchet), 
+                (E,5,Minim), 
+                (B,5,Crotchet), 
+                (A,5,Minim), 
+                (Fs,5,Minim),
+                (E,5,Pointed Crotchet), 
+                (G,5,Quaver), 
+                (Fs,5,Crotchet), 
+                (Ds,5,Minim), 
+                (F,5,Crotchet), 
+                (B,4,Semibreve)                 
+                ]
+              
 main = do
-  B.putStr $ B.concat $ map (prepareSound.interpret 120.note) [C,D,E,C,D,D,E,F,F,E,E,C,D,E,C,D,D,E,F,G,C]
+  B.putStr $ B.concat $ map (prepareSound.interpret 120.note) harrypotter
 
 -- main = do
 --   [frequency,volume,duration] <- getArgs
