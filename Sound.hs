@@ -1,5 +1,7 @@
 module Sound where
 
+type Wave = [Double]
+
 -- this a CAF: Constant Applicative Form
 samplingRate = 44000 :: Int
 
