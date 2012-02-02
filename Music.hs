@@ -21,15 +21,15 @@ data Duration =  Semiquaver |
                  Minim      | 
                  Semibreve  |
                  Breve
-              deriving(Eq,Ord,Show,Read)
-                      
+              deriving (Eq,Ord,Show,Read)
+
 data Note = Note Pitch Octave Duration
           deriving (Eq,Ord,Show,Read)
 
 -- tempi in bpm
 allegro = 80 :: Int
 largo   = 40 :: Int
-                
+
 -- see http://en.wikipedia.org/wiki/Note for formula
 frequency p = truncate $ 2 ** (fromIntegral (fromEnum p - fromEnum A) / 12) * 440
 
@@ -45,4 +45,3 @@ interpret tempo (Note p o d) = slice t $  wave f
   where
     t = value d * 60.0 / fromIntegral tempo
     f = truncate (fromIntegral (frequency p) * (2 ** fromIntegral (o - 4)))
-
