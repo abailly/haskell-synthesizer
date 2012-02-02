@@ -28,7 +28,7 @@ scale_wave_to_a_single_byte_value =
 convert_note_to_wave = 
   interpret note ~?= wave 440
   where
-    note = A
+    note = Note A 4 
     
 tests = [ convert_a_frequency_to_a_wave, 
           slice_a_wave_for_a_given_number_of_seconds,
