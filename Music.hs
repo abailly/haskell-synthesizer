@@ -15,7 +15,8 @@ data Pitch = C | Cs |
           deriving (Eq,Ord,Show,Read,Enum)
 
 -- note values (in british notation)
-data Duration =  Semiquaver |
+data Duration =  Pointed Duration |
+                 Semiquaver |
                  Quaver     |
                  Crotchet   | 
                  Minim      | 
@@ -33,12 +34,13 @@ largo   = 40 :: Int
 -- see http://en.wikipedia.org/wiki/Note for formula
 frequency p = truncate $ 2 ** (fromIntegral (fromEnum p - fromEnum A) / 12) * 440
 
-value Semiquaver = 1/4 
-value Quaver     = 1/2 
-value Crotchet   = 1
-value Minim      = 2
-value Semibreve  = 4 
-value Breve      = 8
+value Semiquaver  = 1/4 
+value Quaver      = 1/2 
+value Crotchet    = 1
+value Minim       = 2
+value Semibreve   = 4 
+value Breve       = 8
+value (Pointed d) = value d * 1.5
 
 interpret :: Tempo -> Note -> Wave
 interpret tempo (Note p o d) = slice t $  wave f
