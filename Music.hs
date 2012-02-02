@@ -2,13 +2,20 @@ module Music where
 import Sound
 
 type Octave = Int
+type Tempo = Int
 
 data Pitch = A
           deriving (Eq,Ord,Show,Read)
 
-data Note = Note Pitch Octave
+data Duration = Black
+              deriving(Eq,Ord,Show,Read)
+                      
+data Note = Note Pitch Octave Duration
           deriving (Eq,Ord,Show,Read)
 
-interpret :: Note -> Wave
-interpret _ = wave 440
+-- tempi in bpm
+allegro = 80 :: Int
+
+interpret :: Tempo -> Note -> Wave
+interpret tempo _ = slice (60.0 / fromIntegral tempo) $ wave 440
 

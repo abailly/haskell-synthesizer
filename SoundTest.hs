@@ -25,14 +25,15 @@ scale_wave_to_a_single_byte_value =
   where
     aWave = wave 440
 
-convert_note_to_wave = 
-  interpret note ~?= wave 440
+convert_note_to_signal = 
+  length (interpret tempo note) ~?= (60 * samplingRate `div` 80)
   where
-    note = Note A 4 
+    tempo = allegro
+    note  = Note A 4 Black
     
 tests = [ convert_a_frequency_to_a_wave, 
           slice_a_wave_for_a_given_number_of_seconds,
           scale_wave_to_a_single_byte_value,
-          convert_note_to_wave]
+          convert_note_to_signal]
         
 runAllTests = runTestTT $ TestList tests

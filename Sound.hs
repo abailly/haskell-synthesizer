@@ -1,9 +1,10 @@
+{-# LANGUAGE NoMonomorphismRestriction #-}
 module Sound where
 
 type Wave = [Double]
 
 -- this a CAF: Constant Applicative Form
-samplingRate = 44000 :: Int
+samplingRate = 44000
 
 -- a sinusoidal wave between -1 and +1 
 wave frequency  = 
@@ -14,7 +15,7 @@ amplitude ratio | ratio > 0 && ratio < 1 = map (*ratio)
                 | otherwise              = id
                                            
 slice seconds wave = 
-  take (samplingRate * seconds) repeatWave
+  take (truncate $ seconds * samplingRate) repeatWave
   where
     repeatWave = wave ++ repeatWave
 
