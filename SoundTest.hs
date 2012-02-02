@@ -25,11 +25,14 @@ scale_wave_to_a_single_byte_value =
   where
     aWave = wave 440
 
-convert_note_to_signal = 
-  length (interpret tempo note) ~?= (60 * samplingRate `div` 80)
+convert_note_to_signal = TestList [
+  length (interpret tempo a4black) ~?= (60 * samplingRate `div` 80),
+  length (interpret tempo a4white) ~?= 2 * (60 * samplingRate `div` 80)
+  ]
   where
     tempo = allegro
-    note  = Note A 4 Black
+    a4black  = Note A 4 Black
+    a4white  = Note A 4 White
     
 tests = [ convert_a_frequency_to_a_wave, 
           slice_a_wave_for_a_given_number_of_seconds,
