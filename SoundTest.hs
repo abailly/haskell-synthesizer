@@ -29,9 +29,11 @@ convert_note_to_signal = TestList [
   length (interpret allegro a4crotchet) ~?= (60 * samplingRate `div` 80),
   length (interpret allegro a4minim) ~?= 2 * (60 * samplingRate `div` 80),
   length (interpret largo a4crotchet) ~?= 2 * (60 * samplingRate `div` 80),
-  take 3 (interpret largo c4crotchet) ~?= take 3 (wave 261)
+  take 3 (interpret largo c4crotchet) ~?= take 3 (wave 261),
+  take 3 (interpret largo c3crotchet) ~?= take 3 (wave 130)
   ]
   where
+    c3crotchet = Note C 3 Crotchet
     c4crotchet = Note C 4 Crotchet
     a4crotchet = Note A 4 Crotchet
     a4minim    = Note A 4 Minim

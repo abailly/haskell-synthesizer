@@ -14,9 +14,6 @@ data Pitch = C | Cs |
              B
           deriving (Eq,Ord,Show,Read,Enum)
 
--- see http://en.wikipedia.org/wiki/Note for formula
-frequency p = truncate $ 2 ** (fromIntegral (fromEnum p - fromEnum A) / 12) * 440
-
 -- note values (in british notation)
 data Duration =  Semiquaver |
                  Quaver     |
@@ -33,8 +30,19 @@ data Note = Note Pitch Octave Duration
 allegro = 80 :: Int
 largo   = 40 :: Int
                 
-interpret :: Tempo -> Note -> Wave
-interpret tempo (Note p o Crotchet) = slice (60.0 / fromIntegral tempo) $ wave (frequency p)
-interpret tempo (Note p o Minim) = slice (2 * 60.0 / fromIntegral tempo) $ wave (frequency p)
+-- see http://en.wikipedia.org/wiki/Note for formula
+frequency p = truncate $ 2 ** (fromIntegral (fromEnum p - fromEnum A) / 12) * 440
 
+value Semiquaver = 1/4 
+value Quaver     = 1/2 
+value Crotchet   = 1
+value Minim      = 2
+value Semibreve  = 4 
+value Breve      = 8
+
+interpret :: Tempo -> Note -> Wave
+interpret tempo (Note p o d) = slice t $  wave f
+  where
+    t = value d * 60.0 / fromIntegral tempo
+    f = truncate (fromIntegral (frequency p) * (2 ** fromIntegral (o - 4)))
 
