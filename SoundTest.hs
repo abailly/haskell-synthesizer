@@ -40,9 +40,15 @@ convert_note_to_signal = TestList [
     a4crotchet = Note A 4 Crotchet
     a4minim    = Note A 4 Minim
     
+operate_on_notes = TestList [
+  take 3 (wave 440 ° wave 330) ~?= [0.0,5.500747189290836e-2,0.10983835296048328],
+  maximum (wave 440 ° wave 330) ~?= 0.9999651284354774
+  ]
+
 tests = [ convert_a_frequency_to_a_wave, 
           slice_a_wave_for_a_given_number_of_seconds,
           scale_wave_to_a_single_byte_value,
-          convert_note_to_signal]
+          convert_note_to_signal,
+          operate_on_notes]
         
 runAllTests = runTestTT $ TestList tests
