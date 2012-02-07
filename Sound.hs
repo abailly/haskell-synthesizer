@@ -15,10 +15,8 @@ wave frequency  =
 w ° w' = zipWith avg w1 w2
   where 
     avg a b = (a + b) /2
-    l1 = length w
-    l2 = length w'
-    w1 = duplicate l2 w
-    w2 = duplicate l1 w'
+    w1 = w ++ w1
+    w2 = w' ++ w2
 
 duplicate :: Int -> [a] -> [a]
 duplicate 0 l = l
