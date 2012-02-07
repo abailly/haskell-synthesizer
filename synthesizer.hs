@@ -25,8 +25,13 @@ harrypotter = [(B,4,Crotchet),
                (F,5,Crotchet), 
                (B,4,Semibreve)]
               
+cMajor = Chord (map note [(C,4,Crotchet), (E,4,Crotchet), (G,4,Crotchet)])
+
 main = do
-  B.putStr $ B.concat $ map (prepareSound.interpret 160.note) harrypotter
+  outputSound $ playChord 160 cMajor
+  
+-- main = do
+--   B.putStr $ B.concat $ map (prepareSound.interpret 160.note) harrypotter
 
 -- main = do
 --   [frequency,volume,duration] <- getArgs

@@ -27,6 +27,9 @@ data Duration =  Pointed Duration |
 data Note = Note Pitch Octave Duration
           deriving (Eq,Ord,Show,Read)
 
+data Chord = Chord [Note]
+           deriving (Eq,Ord,Show,Read)
+
 -- tempi in bpm
 allegro = 80 :: Int
 largo   = 40 :: Int
@@ -41,6 +44,12 @@ value Minim       = 2
 value Semibreve   = 4 
 value Breve       = 8
 value (Pointed d) = value d * 1.5
+
+chord :: Note -> Note -> Chord
+chord n n' = Chord [n,n']
+
+playChord :: Tempo -> Chord -> Wave
+playChord tempo (Chord ns) = foldl1 (°) (map (interpret tempo) ns)
 
 interpret :: Tempo -> Note -> Wave
 interpret tempo (Note p o d) = slice t $  wave f
