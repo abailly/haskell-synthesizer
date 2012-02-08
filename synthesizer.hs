@@ -25,10 +25,16 @@ harrypotter = [(B,4,Crotchet),
                (F,5,Crotchet), 
                (B,4,Semibreve)]
               
-cMajor = Chord (map note [(C,4,Crotchet), (E,4,Crotchet), (G,4,Crotchet)])
+cMajor = Chord (map note [(C,4,Crotchet), 
+                          (E,4,Crotchet), 
+                          (G,4,Crotchet)]) Crotchet
+
+cMinor = Chord (map note [(C,4,Crotchet), 
+                          (Ds,4,Crotchet), 
+                          (G,4,Crotchet)]) Crotchet
 
 main = do
-  outputSound $ playChord 160 cMajor
+  outputSound $ (playChord 60 cMajor) ++ (playChord 60 cMinor)
   
 -- main = do
 --   B.putStr $ B.concat $ map (prepareSound.interpret 160.note) harrypotter
