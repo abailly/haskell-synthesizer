@@ -33,6 +33,9 @@ data Note = Note {
 data Chord = Chord [Note] Duration
            deriving (Eq,Ord,Show,Read)
 
+class Playable p where
+  interpret :: Tempo -> p -> Wave
+  
 -- tempi in bpm
 allegro = 80 :: Int
 largo   = 40 :: Int
@@ -51,13 +54,13 @@ value (Pointed d) = value d * 1.5
 chord :: Note -> Note -> Chord
 chord n n' = Chord [n,n'] (max (duration n) (duration n'))
 
-playChord :: Tempo -> Chord -> Wave
-playChord tempo (Chord ns d) = slice (durationInSeconds tempo d) $ foldl1 (°) (map (interpret tempo) ns)
+instance Playable Chord where
+  interpret tempo (Chord ns d) = slice (durationInSeconds tempo d) $ foldl1 (°) (map (interpret tempo) ns)
 
-interpret :: Tempo -> Note -> Wave
-interpret tempo (Note p o d) = slice t $  wave f
-  where
-    t = durationInSeconds tempo d
-    f = truncate (fromIntegral (frequency p) * (2 ** fromIntegral (o - 4)))
+instance Playable Note where                                                                             
+  interpret tempo (Note p o d) = slice t $  wave f
+    where
+      t = durationInSeconds tempo d
+      f = truncate (fromIntegral (frequency p) * (2 ** fromIntegral (o - 4)))
 
 durationInSeconds tempo d = value d * 60.0 / fromIntegral tempo

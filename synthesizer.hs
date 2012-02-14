@@ -5,8 +5,6 @@ import SoundIO
 
 simplenote p = Note p 4 Crotchet
 
-note (p,o,d) = Note p o d
-
 harrypotter = [(B,4,Crotchet), 
                (E,5,Pointed Crotchet), 
                (G,5,Quaver), 
@@ -31,7 +29,7 @@ cMinor = Chord (map note [(C,4,Crotchet),
                           (G,4,Crotchet)]) Crotchet
 
 main = do
-  outputSound $ (playChord 60 cMajor) ++ (playChord 60 cMinor)
+  outputSound $ (interpret 60 cMajor) ++ (interpret 60 cMinor)
   
 -- main = do
 --   B.putStr $ B.concat $ map (prepareSound.interpret 160.note) harrypotter
