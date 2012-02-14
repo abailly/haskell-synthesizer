@@ -20,6 +20,9 @@ main = run . miku $ do
                    (body $ concatHtml 
                     [h2 $ stringToHtml "Enter score",
                      (form $ concatHtml [
+                         (tag "Tempo" $ stringToHtml "Tempo") ! [strAttr "for" "score" ],
+                         input ! [strAttr "name" "tempo"], 
+                         br,
                          textarea noHtml ! [strAttr "name" "score"],
                          br,
                          reset "cancel" "Cancel",
@@ -29,10 +32,8 @@ main = run . miku $ do
                     ])))
   get "/synthesize" $ do 
     env <- ask 
-    let tempo = maybe 80 (read.B.unpack) (lookup "tempo" $ params env)
+    let tempo = maybe 140 (read.B.unpack) (lookup "tempo" $ params env)
     let score = maybe [] (read.B.unpack) (lookup "score" $ params env)
-    liftIO $ B.putStrLn $ B.pack $ "score: " ++ show score
     let wav = B.concat $ map (prepareSound.interpret tempo.note) score
-    liftIO $ input_bytestring env >>= B.putStrLn 
     update $ set_content_type "application/octet-stream"
     update $ set_body_bytestring wav
