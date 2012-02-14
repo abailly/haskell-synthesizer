@@ -1,10 +1,7 @@
 import System.Environment (getArgs)
-import qualified Data.ByteString.Lazy as B
 import Sound
 import Music
-
-prepareSound = B.pack.map fromIntegral.scale (0,255)
-outputSound  = B.putStr. prepareSound
+import SoundIO
 
 simplenote p = Note p 4 Crotchet
 
