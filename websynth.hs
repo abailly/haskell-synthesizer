@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, PackageImports #-}
+{-# LANGUAGE OverloadedStrings, PackageImports, QuasiQuotes #-}
     
 import Network.Miku(miku,html,get,post)
 import Network.Miku.Utils(update)
@@ -8,28 +8,30 @@ import Hack2.Handler.SnapServer(run)
 import Hack2.Contrib.Request(params)
 import "monads-tf" Control.Monad.Reader(ask)
 import "monads-tf" Control.Monad.Trans(liftIO)
-import Text.Html   
+import Blaze.ByteString.Builder
+import Text.Blaze.Html5 hiding (map, html)
+import Text.Blaze.Html5.Attributes hiding (form,label)
+import Text.Blaze.Renderer.Utf8 (renderHtmlBuilder)
 import qualified Data.ByteString.Char8 as B
 import SoundIO
-import Music
+import Music hiding (value)
 
+                   
+mainPage :: Html
+mainPage = docTypeHtml $
+           body $ do
+             h2 $ "Enter score"
+             form ! action "/synthesize" ! method "GET" $ do       
+               label ! for "tempo" $ text "Tempo"
+               input ! name "tempo" 
+               br
+               textarea ! name "score" $ text "enter your score"
+               br
+               input ! type_ "reset" ! value "Cancel"
+               input ! type_ "submit" ! value "Submit"
+ 
 main = run . miku $ do
-  get "/" (html $
-           B.pack (prettyHtml $
-                   thehtml 
-                   (body $ concatHtml 
-                    [h2 $ stringToHtml "Enter score",
-                     (form $ concatHtml [
-                         (tag "Tempo" $ stringToHtml "Tempo") ! [strAttr "for" "score" ],
-                         input ! [strAttr "name" "tempo"], 
-                         br,
-                         textarea noHtml ! [strAttr "name" "score"],
-                         br,
-                         reset "cancel" "Cancel",
-                         submit "submit" "Submit"]
-                     ) ! [strAttr "action" "/synthesize",
-                          strAttr "method" "GET"]
-                    ])))
+  get "/" (html $ toByteString $ renderHtmlBuilder mainPage)
   get "/synthesize" $ do 
     env <- ask 
     let tempo = maybe 140 (read.B.unpack) (lookup "tempo" $ params env)
