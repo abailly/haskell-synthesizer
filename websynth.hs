@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, PackageImports, QuasiQuotes #-}
+{-# LANGUAGE OverloadedStrings, PackageImports #-}
     
 import Network.Miku(miku,html,get,post)
 import Network.Miku.Utils(update)
@@ -34,8 +34,10 @@ main = run . miku $ do
   get "/" (html $ toByteString $ renderHtmlBuilder mainPage)
   get "/synthesize" $ do 
     env <- ask 
-    let tempo = maybe 140 (read.B.unpack) (lookup "tempo" $ params env)
-    let score = maybe [] (read.B.unpack) (lookup "score" $ params env)
+    let tempo = param env "tempo" 140
+    let score = param env "score" []
     let wav = B.concat $ map (prepareSound.interpret tempo.note) score
     update $ set_content_type "application/octet-stream"
     update $ set_body_bytestring wav
+    where
+      param env name def =  maybe def (read.B.unpack) (lookup name $ params env)
