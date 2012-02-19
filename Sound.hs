@@ -37,3 +37,4 @@ scale _         []     = []
 
 computeSound frequency duration volume = 
   slice duration $ amplitude volume $ wave frequency
+

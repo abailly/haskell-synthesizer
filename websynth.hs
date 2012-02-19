@@ -8,6 +8,8 @@ import Hack2.Handler.SnapServer(run)
 import Hack2.Contrib.Request(params)
 import "monads-tf" Control.Monad.Reader(ask)
 import "monads-tf" Control.Monad.Trans(liftIO)
+
+-- Templating stuff
 import Blaze.ByteString.Builder
 import Text.Blaze.Html5 hiding (map, html)
 import Text.Blaze.Html5.Attributes hiding (form,label)

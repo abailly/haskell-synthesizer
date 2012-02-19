@@ -28,11 +28,11 @@ cMinor = Chord (map note [(C,4,Crotchet),
                           (Ds,4,Crotchet), 
                           (G,4,Crotchet)]) Crotchet
 
-main = do
-  outputSound $ (interpret 60 cMajor) ++ (interpret 60 cMinor)
-  
 -- main = do
---   B.putStr $ B.concat $ map (prepareSound.interpret 160.note) harrypotter
+--   outputSound $ (interpret 60 cMajor) ++ (interpret 60 cMinor)
+  
+main = do
+  playSound (map note harrypotter)
 
 -- main = do
 --   [frequency,volume,duration] <- getArgs
