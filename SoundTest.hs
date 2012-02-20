@@ -50,21 +50,28 @@ operate_on_waves = TestList [
   ]
                    
 playlist_handling = TestList [
+  
   "can store score files references provided by user" ~: TestList [
-     runState (command "load f1 soundfile") emptyStore ~?= (Loaded, Map.fromList [("f1", "soundfile")]),  
+     runState (command "load f1 soundfile") emptyStore ~?= (Loaded, storeWithf1),  
      runState (command "load f2 otherfile") emptyStore ~?= (Loaded, Map.fromList [("f2", "otherfile")]),
      runState (loadf1 >> loadf2) emptyStore ~?= (Loaded, Map.fromList [("f1", "soundfile"),("f2", "otherfile")])
      ],
+  
   "can 'play' score file loaded by user" ~:
   evalState (command "play f1") storeWithf1 ~?= Play "soundfile",
-  "ignore playing a non existing file" ~:
-  evalState (command "play f2") storeWithf1 ~?= Error "score f2 does not exist"
+  
+  "error playing a non existing file" ~:
+  evalState (command "play f2") storeWithf1 ~?= Error "score f2 does not exist",
+  
+  "error when command does not exist" ~:
+  evalState (command "foo bar") storeWithf1 ~?= Error "'foo bar' is not a valid command"
+  
   ]
   where
     emptyStore = Map.empty
     loadf1 = command "load f1 soundfile"
     loadf2 = command "load f2 otherfile"
-    storeWithf1 = execState (loadf1) emptyStore
+    storeWithf1 = Map.fromList [("f1", "soundfile")]
 
 tests = [ convert_a_frequency_to_a_wave, 
           slice_a_wave_for_a_given_number_of_seconds,

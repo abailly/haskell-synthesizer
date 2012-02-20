@@ -4,11 +4,13 @@ import Music
 import Sound
 import qualified Data.ByteString.Char8 as B
 import System.Process(createProcess, shell, CreateProcess(..), StdStream(..))
-import System.IO(hSetBuffering, hSetBinaryMode, BufferMode(..))
-import "monads-tf" Control.Monad.State(State(..),get,put)
+import System.IO(hSetBuffering, hSetBinaryMode, hPutStrLn, hGetLine, stdin, hFlush, stdout, BufferMode(..))
+import "monads-tf" Control.Monad.State(State(..),get,put,runState)
 import qualified Data.Map as Map
 
 type Store = Map.Map String String
+
+emptyStore = Map.empty
 
 data CommandResult = Loaded 
                    | Play String
@@ -27,11 +29,29 @@ command (words -> ["load",name,file]) = do
   return Loaded
 command (words -> ["play",name]) = do
   store <- get 
-  return $
-    maybe (Error $ "score " ++ name ++" does not exist") Play 
+  return $ maybe 
+    (Error $ "score " ++ name ++" does not exist") 
+    Play 
     (Map.lookup name store)
 
+command c = return $ Error $ "'" ++ c ++ "' is not a valid command"
   
+prompt = do putStr "> "
+            hFlush stdout
+
+commandLoop :: Store -> IO ()
+commandLoop s = do
+  cmd <- hGetLine stdin 
+  let (result, s') = runState (command cmd) s 
+  eval result
+  prompt 
+  commandLoop s'
+  where
+    eval Loaded      = hPutStrLn stdout "loaded" 
+    eval (Play file) = do
+      scoreData <- readFile file
+      playSound $ (map note.read) scoreData
+    
 -- use external program 'aplay' to generate sound 
 playSound :: (Playable a) => [a] -> IO ()
 playSound sounds = do 

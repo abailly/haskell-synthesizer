@@ -32,7 +32,8 @@ cMinor = Chord (map note [(C,4,Crotchet),
 --   outputSound $ (interpret 60 cMajor) ++ (interpret 60 cMinor)
   
 main = do
-  playSound (map note harrypotter)
+  prompt
+  commandLoop emptyStore
 
 -- main = do
 --   [frequency,volume,duration] <- getArgs
