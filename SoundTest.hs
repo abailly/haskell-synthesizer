@@ -50,14 +50,16 @@ operate_on_waves = TestList [
   ]
                    
 playlist_handling = TestList [
-  "can read and store score file provided by user" ~: TestList [
+  "can store score files references provided by user" ~: TestList [
   runState (command "load f1 soundfile") emptyStore ~?= (True, Map.fromList [("f1", "soundfile")]),  
-  runState (command "load f2 soundfile") emptyStore ~?= (True, Map.fromList [("f2", "soundfile")])
+  runState (command "load f2 otherfile") emptyStore ~?= (True, Map.fromList [("f2", "otherfile")]),
+  runState (loadf1 >> loadf2) emptyStore ~?= (True, Map.fromList [("f1", "soundfile"),("f2", "otherfile")])
   ]
   ]
   where
     emptyStore = Map.empty
-                    
+    loadf1 = command "load f1 soundfile"
+    loadf2 = command "load f2 otherfile"
 
 tests = [ convert_a_frequency_to_a_wave, 
           slice_a_wave_for_a_given_number_of_seconds,

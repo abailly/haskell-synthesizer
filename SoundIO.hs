@@ -5,7 +5,7 @@ import Sound
 import qualified Data.ByteString.Char8 as B
 import System.Process(createProcess, shell, CreateProcess(..), StdStream(..))
 import System.IO(hSetBuffering, hSetBinaryMode, BufferMode(..))
-import "monads-tf" Control.Monad.State(State(..), put)
+import "monads-tf" Control.Monad.State(State(..),get,put)
 import qualified Data.Map as Map
 
 type Store = Map.Map String String
@@ -15,7 +15,11 @@ outputSound  = B.putStr. prepareSound
 note (p,o,d) = Note p o d
 
 command :: String -> State Store Bool
-command (words -> ["load",name,file]) = put (Map.fromList [(name,file)]) >> return True
+command (words -> ["load",name,file]) = do
+  store <- get 
+  let store' = Map.insert name file store 
+  put store' 
+  return True
   
 -- use external program 'aplay' to generate sound 
 playSound :: (Playable a) => [a] -> IO ()
