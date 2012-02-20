@@ -10,16 +10,24 @@ import qualified Data.Map as Map
 
 type Store = Map.Map String String
 
+data CommandResult = Loaded 
+                   | Play String
+                   deriving (Eq,Show)
+                            
 prepareSound = B.pack.map toEnum.scale (0,255)
 outputSound  = B.putStr. prepareSound
 note (p,o,d) = Note p o d
 
-command :: String -> State Store Bool
+command :: String -> State Store CommandResult
 command (words -> ["load",name,file]) = do
   store <- get 
   let store' = Map.insert name file store 
   put store' 
-  return True
+  return Loaded
+command (words -> ["play",name]) = do
+  store <- get 
+  let Just file = Map.lookup name store 
+  return $ Play file
   
 -- use external program 'aplay' to generate sound 
 playSound :: (Playable a) => [a] -> IO ()
