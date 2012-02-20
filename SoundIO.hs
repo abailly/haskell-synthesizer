@@ -1,4 +1,4 @@
-{-# LANGUAGE PackageImports #-}
+{-# LANGUAGE PackageImports, ViewPatterns #-}
 module SoundIO where
 import Music
 import Sound
@@ -15,7 +15,7 @@ outputSound  = B.putStr. prepareSound
 note (p,o,d) = Note p o d
 
 command :: String -> State Store Bool
-command _ = put (Map.fromList [("f1","soundfile")]) >> return True
+command (words -> ["load",name,file]) = put (Map.fromList [(name,file)]) >> return True
   
 -- use external program 'aplay' to generate sound 
 playSound :: (Playable a) => [a] -> IO ()
