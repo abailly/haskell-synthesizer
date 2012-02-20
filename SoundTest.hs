@@ -1,7 +1,11 @@
+{-# LANGUAGE PackageImports #-}
 import Test.HUnit
 import Test.QuickCheck
 import Sound
+import SoundIO
 import Music
+import "monads-tf" Control.Monad.State(execState,runState)
+import qualified Data.Map as Map
 
 amplitude_multiply_wave_samples d = 
   amplitude d wave' == map (*d) wave'
@@ -42,13 +46,22 @@ convert_note_to_signal = TestList [
     
 operate_on_waves = TestList [
   take 3 (wave 440 ° wave 330) ~?= [0.0,5.500747189290836e-2,0.10983835296048328],
-  maximum (wave 440 ° wave 330) ~?= 0.9999651284354774
+  maximum (take samplingRate (wave 440 ° wave 330)) ~?= 0.9999651284354774
   ]
                    
+playlist_handling = TestList [
+  "can read and store score file provided by user" ~:
+  runState (command "load f1 soundfile") emptyStore ~?= (True, Map.fromList [("f1", "soundfile")])
+  ]
+  where
+    emptyStore = Map.empty
+                    
+
 tests = [ convert_a_frequency_to_a_wave, 
           slice_a_wave_for_a_given_number_of_seconds,
           scale_wave_to_a_single_byte_value,
           convert_note_to_signal,
-          operate_on_waves]
+          operate_on_waves,
+          playlist_handling]
         
 runAllTests = runTestTT $ TestList tests

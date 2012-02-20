@@ -1,14 +1,22 @@
+{-# LANGUAGE PackageImports #-}
 module SoundIO where
 import Music
 import Sound
 import qualified Data.ByteString.Char8 as B
 import System.Process(createProcess, shell, CreateProcess(..), StdStream(..))
 import System.IO(hSetBuffering, hSetBinaryMode, BufferMode(..))
+import "monads-tf" Control.Monad.State(State(..))
+import qualified Data.Map as Map
+
+type Store = Map.Map String String
 
 prepareSound = B.pack.map toEnum.scale (0,255)
 outputSound  = B.putStr. prepareSound
 note (p,o,d) = Note p o d
 
+command :: String -> State Store Bool
+command _ = return False
+  
 -- use external program 'aplay' to generate sound 
 playSound :: (Playable a) => [a] -> IO ()
 playSound sounds = do 
