@@ -12,6 +12,7 @@ type Store = Map.Map String String
 
 data CommandResult = Loaded 
                    | Play String
+                   | Error String
                    deriving (Eq,Show)
                             
 prepareSound = B.pack.map toEnum.scale (0,255)
@@ -26,8 +27,10 @@ command (words -> ["load",name,file]) = do
   return Loaded
 command (words -> ["play",name]) = do
   store <- get 
-  let Just file = Map.lookup name store 
-  return $ Play file
+  return $
+    maybe (Error $ "score " ++ name ++" does not exist") Play 
+    (Map.lookup name store)
+
   
 -- use external program 'aplay' to generate sound 
 playSound :: (Playable a) => [a] -> IO ()

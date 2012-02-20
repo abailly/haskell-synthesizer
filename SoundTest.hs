@@ -56,7 +56,9 @@ playlist_handling = TestList [
      runState (loadf1 >> loadf2) emptyStore ~?= (Loaded, Map.fromList [("f1", "soundfile"),("f2", "otherfile")])
      ],
   "can 'play' score file loaded by user" ~:
-  evalState (command "play f1") storeWithf1 ~?= Play "soundfile"
+  evalState (command "play f1") storeWithf1 ~?= Play "soundfile",
+  "ignore playing a non existing file" ~:
+  evalState (command "play f2") storeWithf1 ~?= Error "score f2 does not exist"
   ]
   where
     emptyStore = Map.empty
