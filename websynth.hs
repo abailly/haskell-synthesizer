@@ -1,5 +1,16 @@
+-- | A module for sample web server providing wave generation from 
+-- a score in Readable form.
+
+-- We use the OverloadedStrings extension in order to benefit from more  
+-- efficient string implementation provided by Data.ByteString.Char8 module.
+-- By default in Haskell, a String is a list of Char which is extremely 
+-- inefficient as a Char is a full Unicode 32-bit number.
+
 {-# LANGUAGE OverloadedStrings, PackageImports #-}
     
+-- miku is one of many recent web frameworks that try to offer the same 
+-- ease of use than what's available in more dynamic languages like python
+-- or ruby.
 import Network.Miku(miku,html,get,post)
 import Network.Miku.Utils(update)
 import Hack2.Contrib.Request(input_bytestring)
@@ -9,7 +20,8 @@ import Hack2.Contrib.Request(params)
 import "monads-tf" Control.Monad.Reader(ask)
 import "monads-tf" Control.Monad.Trans(liftIO)
 
--- Templating stuff
+-- Templating stuff. Blaze provides a rich set of combinators (functions) to
+-- build objects representing HTML structure in a typed and efficient way.
 import Blaze.ByteString.Builder
 import Text.Blaze.Html5 hiding (map, html)
 import Text.Blaze.Html5.Attributes hiding (form,label)
@@ -33,6 +45,9 @@ mainPage = docTypeHtml $
                input ! type_ "submit" ! value "Submit"
  
 main = run . miku $ do
+  -- miku provides a dedicated monad for expressing routing rules based on standard
+  -- http queries structure. Each operation in the monad is a rule that gets matched
+  -- by incoming request in order and returns a value.
   get "/" (html $ toByteString $ renderHtmlBuilder mainPage)
   get "/synthesize" $ do 
     env <- ask 
